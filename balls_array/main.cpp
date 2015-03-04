@@ -89,9 +89,24 @@ void Bound(int sign)
 
 			if ((ball[i].y >= HEIGHT / 2) || (ball[i].y <= -HEIGHT / 2)){
 				ball[i].speed_y *= sign;
+				if ((ball[i].y <= -HEIGHT / 2))
+				{
+					ball[i].y = -HEIGHT / 2 + ball[i].r;
+				}
+
 			}
 
+
+
 		}
+
+	}
+}
+
+void Ball_gravity(AppEnv& env)
+{
+	for (int i = 0; i < BALL_MAX; ++i){
+		if (env.isPressKey('G')) ball[i].speed_y -= 1.0;
 
 	}
 }
@@ -105,6 +120,7 @@ int main() {
 
 	int sign = -1;
 	while (env.isOpen()) {
+
 		//生成処理
 		Ball_create(env, random);
 
@@ -113,6 +129,9 @@ int main() {
 
 		//バウンド処理
 		Bound(sign);
+
+		//重力処理
+		Ball_gravity(env);
 
 		env.setupDraw();
 
