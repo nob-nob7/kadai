@@ -34,10 +34,14 @@ void Init(Random& random){
 		ball[i].speed_x = random.fromFirstToLast(-4.0f, 4.0f);
 		ball[i].speed_y = random.fromFirstToLast(-4.0f, 4.0f);
 
+		ball[i].color.red() = random.fromFirstToLast(0.0f, 1.0f);
+		ball[i].color.green() = random.fromFirstToLast(0.0f, 1.0f);
+		ball[i].color.blue() = random.fromFirstToLast(0.0f, 1.0f);
+
 	}
 }
 
-void Ball_create(AppEnv& env, Random& random)
+void Ball_create(AppEnv& env)
 {
 	//生成処理
 	if (env.isPushButton(Mouse::LEFT)){
@@ -50,7 +54,6 @@ void Ball_create(AppEnv& env, Random& random)
 				ball[i].x = env.mousePosition().x();
 				ball[i].y = env.mousePosition().y();
 
-				ball[i].color = Color(random.fromFirstToLast(0.0f, 1.0f), random.fromFirstToLast(0.0f, 1.0f), random.fromFirstToLast(0.0f, 1.0f));
 				break;
 			}
 		}
@@ -96,8 +99,6 @@ void Bound(int sign)
 
 			}
 
-
-
 		}
 
 	}
@@ -122,7 +123,7 @@ int main() {
 	while (env.isOpen()) {
 
 		//生成処理
-		Ball_create(env, random);
+		Ball_create(env);
 
 		//移動処理
 		Ball_Move();
