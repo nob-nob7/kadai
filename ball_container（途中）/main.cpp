@@ -5,12 +5,10 @@
 #include "lib/defines.hpp"
 #include "lib/appEnv.hpp"
 #include "lib/random.hpp"
+#include "headers\macros.hpp"
 #include <vector>
 
-enum Window {
-	WIDTH = 512,
-	HEIGHT = 512
-};
+
 
 struct Ball{
 	float x;
@@ -21,12 +19,12 @@ struct Ball{
 	Color color;
 };
 
-Ball Init(Random& random)
+Ball Init(Random& random, AppEnv& env)
 {
 	Ball temp;
 
-	temp.x = 0;
-	temp.y = 0;
+	temp.x = env.mousePosition().x();
+	temp.y = env.mousePosition().y();
 	temp.r = 10;
 	temp.speed_x = random.fromFirstToLast(-5.0f, 5.0f);
 	temp.speed_y = random.fromFirstToLast(-5.0f, 5.0f);
@@ -35,6 +33,7 @@ Ball Init(Random& random)
 
 	return temp;
 }
+
 
 void Ball_Move(Ball& temp)
 {
@@ -60,6 +59,14 @@ void Ball_Bound(Ball& temp)
 	}
 }
 
+void Ball_Gravity(Ball& temp, AppEnv& env)
+{
+	if (env.isPressKey('G'))
+	{
+		temp.speed_y -= 1;
+	}
+}
+
 void Ball_Draw(Ball& temp)
 {
 	drawFillCircle(temp.x, temp.y, temp.r, temp.r, 100, temp.color);
@@ -69,16 +76,16 @@ void Ball_Draw(Ball& temp)
 // 
 int main() {
 	AppEnv env(Window::WIDTH, Window::HEIGHT, false, false);
-	
+
 	Random random;
-
+	Ball temp;
 	std::vector<Ball> ball;
-
 	while (env.isOpen()) {
 
 		//生成処理
 		if (env.isPushButton(Mouse::LEFT)) {
-			ball.push_back(Init(random));
+			ball.push_back(Init(random, env));
+
 		}
 
 		for (auto& it : ball) {
@@ -89,11 +96,11 @@ int main() {
 			Ball_Bound(it);
 
 			//重力処理
-			//Ball_gravity(env);
+			Ball_Gravity(it, env);
 		}
-	
+
 		env.setupDraw();
-		
+
 		for (auto& it : ball) {
 			//描画処理
 			Ball_Draw(it);
